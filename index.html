@@ -8,20 +8,22 @@
         /* ----------------------------------------------------
         * (A) ESTILOS GERAIS
         * ---------------------------------------------------*/
-        * {
-          background: transparent !important;
+* {
           box-shadow: none !important;
         }
         body {
           font-family: 'Poppins', sans-serif;
-          background: linear-gradient(to bottom, #003b00, #00d700);
+          background: linear-gradient(to bottom, #00d700, #003b00);
           min-height: 100vh;
           background-attachment: fixed;
           background-repeat: no-repeat;
           background-size: cover;
           margin: 0;
           padding: 0;
-          color: #fff;
+          color: #000;
+        }
+        body, label, p, h1, h2, h3, h4, h5, h6, span {
+          color: #000 !important;
         }
         .hidden { display: none !important; }
 
@@ -49,6 +51,7 @@
           background: #fff !important;
           color: #000 !important;
           border-radius: 6px;
+          border: 1px solid #ccc;
         }
 
         input,
@@ -57,6 +60,7 @@
           background: #fff !important;
           color: #000 !important;
           border-radius: 6px;
+          border: 1px solid #ccc;
         }
 
 
@@ -92,6 +96,8 @@
           max-width: 900px;
           overflow-y: auto;
           font-size: 0.9rem;
+          background: rgba(255, 255, 255, 0.95);
+          color: #000;
         }
         .overlay {
           position: fixed;
@@ -415,7 +421,7 @@
         }
         .dark-mode button {
           background-color: #d8ff00 !important;
-          color: #003b00 !important;
+          color: #fff !important;
         }
         .dark-mode input,
         .dark-mode select,
@@ -430,6 +436,7 @@
           border-color: #333;
         }
         .dark-mode .modal {
+          background: #111111;
           color: #fff;
         }
         .dark-mode .modal input,
@@ -634,13 +641,12 @@ button {
   border-radius: 6px;
   border: none;
   padding: 10px 20px;
-  transition: transform 0.2s, background-color 0.2s;
+  transition: background-color 0.3s;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
   cursor: pointer;
 }
 button:hover {
-  background-color: #cce600 !important;
-  transform: scale(1.05);
+  background-color: #cce500 !important;
 }
 </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
