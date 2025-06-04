@@ -659,6 +659,97 @@ footer {
   background: transparent;
   backdrop-filter: blur(0);
 }
+/* 🌙 ESTILO GLOBAL PARA MODO ESCURO */
+body.dark-mode {
+  background: linear-gradient(to bottom, #111111, #000000);
+  color: #ffffff;
+}
+
+/* ✅ TEXTOS EM GERAL */
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode label,
+body.dark-mode td,
+body.dark-mode th,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6,
+body.dark-mode strong {
+  color: #ffffff !important;
+}
+
+/* ✅ INPUTS, SELECTS E TEXTAREAS */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #444;
+  border-radius: 6px;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #aaaaaa;
+}
+
+/* ✅ BOTÕES AMARELOS COM TEXTO PRETO */
+body.dark-mode button,
+body.dark-mode .btn,
+body.dark-mode input[type="button"],
+body.dark-mode input[type="submit"] {
+  background-color: #d8ff00 !important;
+  color: #000000 !important; /* CONTRASTE PRETO */
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  transition: transform 0.1s ease-in-out;
+}
+
+body.dark-mode button:hover,
+body.dark-mode .btn:hover {
+  transform: scale(1.03);
+  filter: brightness(1.1);
+}
+
+/* ✅ MODAIS E CAIXAS */
+body.dark-mode .card,
+body.dark-mode .modal,
+body.dark-mode .container,
+body.dark-mode .box {
+  background-color: rgba(20, 20, 20, 0.95);
+  color: #ffffff !important;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+/* ✅ TABELAS */
+body.dark-mode table {
+  background-color: transparent;
+  border-color: #444;
+  color: #ffffff;
+}
+
+/* ✅ COLUNA "STATUS" COM COR DINÂMICA */
+body.dark-mode td.status {
+  color: #ffffff;
+}
+
+body.dark-mode td.status:has(span),
+body.dark-mode td.status span {
+  color: #ffffff;
+}
+
+body.dark-mode td.status:has(span:contains("RESERVADO")),
+body.dark-mode td.status span:contains("RESERVADO") {
+  color: red !important;
+  font-weight: bold;
+}
+
 </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
