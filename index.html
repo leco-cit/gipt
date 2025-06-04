@@ -1780,7 +1780,7 @@ body.dark-mode .acao {
     localStorage.setItem(chave, JSON.stringify([]));
   }
 });
-window.addEventListener('DOMContentLoaded', () => {
+function giptInit(){
 
 /* =====================================================
 * TOP MODELOS (RANKING) – MODAL & LÓGICA
@@ -2201,10 +2201,7 @@ function renderTopModelosChart(arr){
         }
 
 
-        document.addEventListener("DOMContentLoaded", function(){
-
-
-const btnReservas = document.getElementById('btn-reservas');
+        const btnReservas = document.getElementById('btn-reservas');
 btnReservas.addEventListener('click', ()=>{
   atualizarModalReservas();
   document.getElementById('modal-reserva').classList.remove('hidden');
@@ -5993,8 +5990,10 @@ estoque.splice(idx, 1);
           }
 
 
-        }); // DOMContentLoaded end
+        }
 
+if(document.readyState !== 'loading') { giptInit(); } else { document.addEventListener('DOMContentLoaded', giptInit); }
+window.addEventListener('load', giptInit);
 
         window.showAlert = function(message, callback) {
           const modal = document.getElementById('modal-alert');
