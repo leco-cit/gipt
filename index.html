@@ -709,6 +709,23 @@ const topModelosRankingDiv = document.getElementById('topm-ranking');
 const topModelosChartCanvas = document.getElementById('topm-chart');
 let topModelosChart = null;
 
+  const toggleDarkModeBtn = document.getElementById('toggle-dark-mode');
+  const savedMode = localStorage.getItem('darkMode');
+  if (savedMode === 'on') {
+    document.body.classList.add('dark-mode');
+    toggleDarkModeBtn.textContent = 'Modo Claro';
+  }
+  toggleDarkModeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+      localStorage.setItem('darkMode', 'on');
+      toggleDarkModeBtn.textContent = 'Modo Claro';
+    } else {
+      localStorage.setItem('darkMode', 'off');
+      toggleDarkModeBtn.textContent = 'Modo Escuro';
+    }
+  });
+
 function abrirModalTopModelos(){
   document.getElementById('modal-top-modelos').classList.remove('hidden');
   filtrarTopModelosPorPeriodo('hoje');
@@ -2209,15 +2226,6 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
           });
 
 
-          const toggleDarkModeBtn = document.getElementById('toggle-dark-mode');
-          toggleDarkModeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            if(document.body.classList.contains('dark-mode')){
-              toggleDarkModeBtn.textContent = "Modo Claro";
-            } else {
-              toggleDarkModeBtn.textContent = "Modo Escuro";
-            }
-          });
 
 
           // Carregar/inicializar do localStorage
