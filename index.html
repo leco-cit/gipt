@@ -3114,6 +3114,10 @@ estoque.splice(idx,1);
                   showSelectPrompt("Como o cliente chegou? ('ORG' para orgânico ou 'TP' para tráfego pago)",
                     [{value:"ORG", text:"Orgânico (ORG)"}, {value:"TP", text:"Tráfego Pago (TP)"}], "ORG", function(adsChoice){
                       if(adsChoice===null) return;
+                      if(item.status === "RESERVADO") {
+                        showAlert("Este item está RESERVADO e não pode ser baixado!");
+                        return;
+                      }
                       historico.push({
                         serial: item.serial,
                         data: dataBaixa,
@@ -3134,10 +3138,6 @@ estoque.splice(idx,1);
                         // IMPLEMENTAÇÃO #2 (manter notas)
                         notas: item.notas
                       });
-                      if(item.status === "RESERVADO") {
-  showAlert("Este item está RESERVADO e não pode ser baixado!");
-  return;
-}
 estoque.splice(idx, 1);
                       if(item.chipOperadora !== ""){
                         chipsCount[item.categoria][item.chipOperadora]--;
@@ -3199,11 +3199,11 @@ estoque.splice(idx, 1);
                         // IMPLEMENTAÇÃO #2 (manter notas)
                         notas: item.notas
                       };
-                      historico.push(record);
                       if(item.status === "RESERVADO") {
-  showAlert("Este item está RESERVADO e não pode ser baixado!");
-  return;
-}
+                        showAlert("Este item está RESERVADO e não pode ser baixado!");
+                        return;
+                      }
+                      historico.push(record);
 estoque.splice(idx, 1);
                       localStorage.setItem('estoque', JSON.stringify(estoque));
                       if(item.chipOperadora !== ""){
@@ -3311,10 +3311,10 @@ estoque.splice(idx, 1);
                 notas: item.notas
               });
               if(item.status === "RESERVADO") {
-  showAlert("Este item está RESERVADO e não pode ser baixado!");
-  return;
-}
-estoque.splice(idx,1);
+                showAlert("Este item está RESERVADO e não pode ser baixado!");
+                return;
+              }
+              estoque.splice(idx,1);
               localStorage.setItem('estoque', JSON.stringify(estoque));
               if(item.chipOperadora !== ""){
                 chipsCount[item.categoria][item.chipOperadora]--;
