@@ -623,6 +623,11 @@
 </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+["estoque", "vendas", "usuarios", "baixas", "consultores"].forEach(chave => {
+  if (!localStorage.getItem(chave)) {
+    localStorage.setItem(chave, JSON.stringify([]));
+  }
+});
 window.addEventListener('DOMContentLoaded', () => {
 
 /* =====================================================
