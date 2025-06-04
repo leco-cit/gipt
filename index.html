@@ -872,7 +872,7 @@ function renderTopModelosChart(arr){
   <!-- CONTÊINER DE ACESSO: Cadastro Inicial e Login -->
   <div id="access-container">
         <!-- Cadastro Inicial -->
-        <div id="firstAccessModal" class="hidden">
+        <div id="firstAccessModal">
           <h2>Cadastro Inicial</h2>
           <form id="firstAccessForm">
             <label for="firstName">Nome:</label>
@@ -887,7 +887,7 @@ function renderTopModelosChart(arr){
 
 
         <!-- Formulário de Login -->
-        <form id="login-form" autocomplete="off">
+        <form id="login-form" autocomplete="off" class="hidden">
           <label for="username">Usuário:</label>
           <input type="text" id="username" required autocomplete="off" />
           <label for="password">Senha:</label>
@@ -2321,8 +2321,10 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
           const loginForm = document.getElementById('login-form');
           const app = document.getElementById('app');
 
-          if(!savedCadastro){
-            firstAccessModal.classList.remove('hidden');
+          if(savedCadastro){
+            firstAccessModal.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+          } else {
             loginForm.classList.add('hidden');
             app.classList.add('hidden');
           }
