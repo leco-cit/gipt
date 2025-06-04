@@ -2315,10 +2315,18 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
           }
 
 
-          const userData = localStorage.getItem('userData');
-          if(!userData){
-            document.getElementById('firstAccessModal').classList.remove('hidden');
+          const cadastroKey = 'usuarioCadastro';
+          const savedCadastro = localStorage.getItem(cadastroKey);
+          const firstAccessModal = document.getElementById('firstAccessModal');
+          const loginForm = document.getElementById('login-form');
+          const app = document.getElementById('app');
+
+          if(!savedCadastro){
+            firstAccessModal.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+            app.classList.add('hidden');
           }
+
           document.getElementById('firstAccessForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const data = {
@@ -2326,8 +2334,9 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
               email: document.getElementById('firstEmail').value.trim(),
               telefone: document.getElementById('firstPhone').value.trim()
             };
-            localStorage.setItem('userData', JSON.stringify(data));
-            document.getElementById('firstAccessModal').classList.add('hidden');
+            localStorage.setItem(cadastroKey, JSON.stringify(data));
+            firstAccessModal.classList.add('hidden');
+            loginForm.classList.remove('hidden');
           });
 
 
@@ -2353,7 +2362,7 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
               inicializarCombos();
               popularModelFilters();
               registrarLog("Inicialização", "Dados carregados");
-              const storedUserData = localStorage.getItem('userData');
+              const storedUserData = localStorage.getItem('usuarioCadastro');
               if(storedUserData){
                 const uData = JSON.parse(storedUserData);
                 const licenseText = `ESTE PROGRAMA ESTÁ LICENCIADO PARA ${uData.nome} (${uData.email}, ${uData.telefone})`;
