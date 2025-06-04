@@ -5992,8 +5992,17 @@ estoque.splice(idx, 1);
 
         }
 
-if(document.readyState !== 'loading') { giptInit(); } else { document.addEventListener('DOMContentLoaded', giptInit); }
-window.addEventListener('load', giptInit);
+function tryInit(){
+  if(window._giptInitialized) return;
+  if(document.getElementById('firstAccessForm')){
+    window._giptInitialized = true;
+    giptInit();
+  } else {
+    setTimeout(tryInit, 100);
+  }
+}
+if(document.readyState !== 'loading') { tryInit(); } else { document.addEventListener('DOMContentLoaded', tryInit); }
+window.addEventListener('load', tryInit);
 
         window.showAlert = function(message, callback) {
           const modal = document.getElementById('modal-alert');
