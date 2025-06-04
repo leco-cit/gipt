@@ -2316,10 +2316,12 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
 
 
           const cadastroKey = 'usuarioCadastro';
-          const savedCadastro = localStorage.getItem(cadastroKey);
+          const firstAccessForm = document.getElementById('firstAccessForm');
           const firstAccessModal = document.getElementById('firstAccessModal');
           const loginForm = document.getElementById('login-form');
           const app = document.getElementById('app');
+
+          const savedCadastro = localStorage.getItem(cadastroKey);
 
           if(savedCadastro){
             firstAccessModal.classList.add('hidden');
@@ -2329,17 +2331,19 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
             app.classList.add('hidden');
           }
 
-          document.getElementById('firstAccessForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const data = {
-              nome: document.getElementById('firstName').value.trim(),
-              email: document.getElementById('firstEmail').value.trim(),
-              telefone: document.getElementById('firstPhone').value.trim()
-            };
-            localStorage.setItem(cadastroKey, JSON.stringify(data));
-            firstAccessModal.classList.add('hidden');
-            loginForm.classList.remove('hidden');
-          });
+          if(firstAccessForm){
+            firstAccessForm.addEventListener('submit', (e) => {
+              e.preventDefault();
+              const data = {
+                nome: document.getElementById('firstName').value.trim(),
+                email: document.getElementById('firstEmail').value.trim(),
+                telefone: document.getElementById('firstPhone').value.trim()
+              };
+              localStorage.setItem(cadastroKey, JSON.stringify(data));
+              firstAccessModal.classList.add('hidden');
+              loginForm.classList.remove('hidden');
+            });
+          }
 
 
           // =========== LOGIN ============
