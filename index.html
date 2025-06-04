@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <title>Gestão Integrada do Parceiro Ton</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
         /* ----------------------------------------------------
         * (A) ESTILOS GERAIS
         * ---------------------------------------------------*/
         body {
-          font-family: Arial, sans-serif;
+          font-family: 'Poppins', sans-serif;
           margin: 20px;
+          background-color: #f3f4f6;
         }
         .hidden { display: none !important; }
 
@@ -619,6 +621,19 @@
   width:280px !important;
   height:280px !important;
   flex:0 0 280px;
+}
+
+/* ==== Novos estilos globais para botões no modo claro ==== */
+body:not(.dark-mode) button {
+  background-color: #00d700 !important;
+  color: #fff !important;
+  border-radius: 6px !important;
+  border: none;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+body:not(.dark-mode) button:hover {
+  background-color: #00b300 !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
