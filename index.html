@@ -14,14 +14,14 @@
         }
         body {
           font-family: 'Poppins', sans-serif;
-          background: linear-gradient(to top, #003b00, #00d700);
+          background: linear-gradient(to bottom, #003b00, #00d700);
           min-height: 100vh;
           background-attachment: fixed;
           background-repeat: no-repeat;
           background-size: cover;
           margin: 0;
           padding: 0;
-          color: #000;
+          color: #fff;
         }
         .hidden { display: none !important; }
 
@@ -46,6 +46,17 @@
           max-width: 300px;
           padding: 8px;
           box-sizing: border-box;
+          background: #fff !important;
+          color: #000 !important;
+          border-radius: 6px;
+        }
+
+        input,
+        select,
+        textarea {
+          background: #fff !important;
+          color: #000 !important;
+          border-radius: 6px;
         }
 
 
@@ -399,14 +410,19 @@
         * (O) MODOS ESCURO
         * ---------------------------------------------------*/
         .dark-mode {
-          color: #e0e0e0;
+          background: #111111;
+          color: #fff;
         }
-        .dark-mode button,
+        .dark-mode button {
+          background-color: #d8ff00 !important;
+          color: #003b00 !important;
+        }
         .dark-mode input,
         .dark-mode select,
         .dark-mode textarea {
-          color: #e0e0e0;
-          border-color: #333;
+          background: #333 !important;
+          color: #fff !important;
+          border-color: #555;
         }
         .dark-mode table,
         .dark-mode th,
@@ -420,8 +436,9 @@
         .dark-mode .modal select,
         .dark-mode .modal textarea,
         .dark-mode .modal button {
+          background: #333 !important;
           color: #fff;
-          border-color: #fff;
+          border-color: #555;
         }
         .dark-mode button:hover,
         .dark-mode .modal button:hover,
@@ -612,17 +629,18 @@
 /* ==== Novos estilos globais para botões no modo claro ==== */
 button {
   background-color: #d8ff00 !important;
-  color: #000 !important;
-  font-weight: 600;
+  color: #003b00 !important;
+  font-weight: bold;
   border-radius: 6px;
   border: none;
   padding: 10px 20px;
-  transition: 0.3s ease;
+  transition: transform 0.2s, background-color 0.2s;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
   cursor: pointer;
 }
 button:hover {
   background-color: #cce600 !important;
+  transform: scale(1.05);
 }
 </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
