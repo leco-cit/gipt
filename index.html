@@ -11,9 +11,20 @@
         body {
           font-family: 'Poppins', sans-serif;
           margin: 20px;
-          background-color: #f3f4f6;
+        }
+        body:not(.dark-mode) {
+          background: linear-gradient(to bottom right, #00d700, #003b00);
+          color: #000;
         }
         .hidden { display: none !important; }
+
+        body:not(.dark-mode) .card {
+          background: #fff;
+          padding: 16px;
+          border-radius: 8px;
+          margin-bottom: 24px;
+          border: 1px solid #ccc;
+        }
 
 
         /* Estilos para inputs dos modais de gerenciamento */
@@ -625,15 +636,19 @@
 
 /* ==== Novos estilos globais para botões no modo claro ==== */
 body:not(.dark-mode) button {
-  background-color: #00d700 !important;
-  color: #fff !important;
-  border-radius: 6px !important;
-  border: none;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #00d700;
+  padding: 8px 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: 0.3s;
+  cursor: pointer;
 }
 body:not(.dark-mode) button:hover {
-  background-color: #00b300 !important;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  background-color: #00b500;
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -887,7 +902,7 @@ function renderTopModelosChart(arr){
   <!-- CONTÊINER DE ACESSO: Cadastro Inicial e Login -->
   <div id="access-container">
         <!-- Cadastro Inicial -->
-        <div id="firstAccessModal">
+        <div id="firstAccessModal" class="card">
           <h2>Cadastro Inicial</h2>
           <form id="firstAccessForm">
             <label for="firstName">Nome:</label>
@@ -902,7 +917,7 @@ function renderTopModelosChart(arr){
 
 
         <!-- Formulário de Login -->
-        <form id="login-form" autocomplete="off" class="hidden">
+        <form id="login-form" class="card hidden" autocomplete="off">
           <label for="username">Usuário:</label>
           <input type="text" id="username" required autocomplete="off" />
           <label for="password">Senha:</label>
@@ -920,7 +935,7 @@ function renderTopModelosChart(arr){
 
 
         <!-- Formulário de Cadastro -->
-        <div id="cadastro-container" class="hidden">
+        <div id="cadastro-container" class="card hidden">
           <h2>Cadastrar Maquininha</h2>
           <form id="cadastro-form">
             <label>Tipo de Inclusão:</label><br />
@@ -997,7 +1012,7 @@ function renderTopModelosChart(arr){
           <label>Exibir somente RESERVADO?</label>
           <input type="checkbox" id="filter-reservado-pronta" />
         </div>
-        <div id="pronta-entrega-container" class="hidden">
+        <div id="pronta-entrega-container" class="card hidden">
           <div class="scroll-area">
             <table id="table-pronta">
               <thead>
@@ -1032,7 +1047,7 @@ function renderTopModelosChart(arr){
           <label>Exibir somente RESERVADO?</label>
           <input type="checkbox" id="filter-reservado-ton" />
         </div>
-        <div id="ton-na-mao-container" class="hidden">
+        <div id="ton-na-mao-container" class="card hidden">
           <div class="scroll-area">
             <table id="table-ton">
               <thead>
