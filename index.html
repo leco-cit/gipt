@@ -2065,6 +2065,24 @@ function renderTopModelosChart(arr){
         let systemConfig = {};
         let valores = {};
 
+        function corrigirValoresEstoque(){
+          let atualizado = false;
+          if(Array.isArray(estoque)){
+            estoque.forEach(item => {
+              if(item && item.plano === 'PJ MEI'){
+                if(item.modelo === 'T3 SMART' && Number(item.venda) !== 171.00){
+                  item.venda = 171.00;
+                  atualizado = true;
+                } else if(item.modelo === 'T3' && Number(item.venda) !== 160.92){
+                  item.venda = 160.92;
+                  atualizado = true;
+                }
+              }
+            });
+          }
+          return atualizado;
+        }
+
 
         document.addEventListener("DOMContentLoaded", function(){
 
@@ -2151,6 +2169,7 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
 
           // Se itens já baixados estiverem no estoque, removê-los
           estoque = estoque.filter(item => !historico.some(h => h.serial === item.serial));
+          corrigirValoresEstoque();
 
 
           // Garante consultores
@@ -4143,6 +4162,7 @@ estoque.splice(idx, 1);
                   chipsDateLastUpdate = jsonData.chipsDateLastUpdate;
                   systemConfig = jsonData.systemConfig;
                   valores = jsonData.valores || {};
+                  corrigirValoresEstoque();
                   localStorage.setItem('estoque', JSON.stringify(estoque));
                   localStorage.setItem('historico', JSON.stringify(historico));
                   localStorage.setItem('chipsCount', JSON.stringify(chipsCount));
