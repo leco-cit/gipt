@@ -5507,7 +5507,7 @@ estoque.splice(idx,1);
                 btnReverter.style.marginTop = "5px";
                 btnReverter.style.fontSize = "0.8rem";
                 btnReverter.addEventListener('click', () => {
-                  item.notas = item.notas.replace(/CONCLUÍD[OA] ✅ em \d{2}\/\d{2}\/\d{4}/i, "").trim();
+                  item.notas = item.notas.replace(/CONCLU[IÍ]D(?:O|A|IDO) ✅ em \d{2}\/\d{2}\/\d{4}/i, "").trim();
                   localStorage.setItem('estoque', JSON.stringify(estoque));
                   registrarLog("Reverter Concluído", `Serial ${item.serial} revertida`);
                   atualizarModalConcluidos();
