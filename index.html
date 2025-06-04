@@ -2533,6 +2533,15 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
               }
             }
           });
+          function atualizarValorVenda(){
+            const modeloSel = document.getElementById('modelo').value;
+            const planoSel = document.getElementById('plano').value;
+            if((planoSel === 'PJ MEI' || planoSel === 'Ton Pro MEI e PJ') && modeloSel === 'T3 SMART'){
+              document.getElementById('venda').value = '171.00';
+            } else if((planoSel === 'PJ MEI' || planoSel === 'Ton Pro MEI e PJ') && modeloSel === 'T3'){
+              document.getElementById('venda').value = '160.92';
+            }
+          }
           document.getElementById('modelo').addEventListener('change', ()=>{
             if(categoriaSelect.value === "Pronta Entrega"){
               const md = document.getElementById('modelo').value;
@@ -2542,6 +2551,7 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
                 document.getElementById('venda').value = valores[md][pl].venda || "";
               }
             }
+            atualizarValorVenda();
           });
           document.getElementById('plano').addEventListener('change', ()=>{
             if(categoriaSelect.value === "Pronta Entrega"){
@@ -2552,6 +2562,7 @@ document.getElementById('fechar-modal-reserva').addEventListener('click', ()=>{
                 document.getElementById('venda').value = valores[md][pl].venda || "";
               }
             }
+            atualizarValorVenda();
           });
 
 
