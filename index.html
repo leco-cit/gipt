@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <title>Gestão Integrada do Parceiro Ton</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
   <style>
         /* ----------------------------------------------------
         * (A) ESTILOS GERAIS
@@ -686,238 +681,6 @@ body.dark-mode .acao {
   font-weight: bold;
 }
 </style>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-["estoque", "vendas", "usuarios", "baixas", "consultores"].forEach(chave => {
-  if (!localStorage.getItem(chave)) {
-    localStorage.setItem(chave, JSON.stringify([]));
-  }
-});
-window.addEventListener('DOMContentLoaded', () => {
-
-/* =====================================================
-* TOP MODELOS (RANKING) – MODAL & LÓGICA
-* -----------------------------------------------------*/
-const topModelosBtnsPeriod = {
-  'hoje': document.getElementById('topm-hoje'),
-  'ontem': document.getElementById('topm-ontem'),
-  'esta-semana': document.getElementById('topm-esta-semana'),
-  'semana-passada': document.getElementById('topm-semana-passada'),
-  'este-mes': document.getElementById('topm-este-mes')
-};
-const topModelosRankingDiv = document.getElementById('topm-ranking');
-const topModelosChartCanvas = document.getElementById('topm-chart');
-let topModelosChart = null;
-
-function abrirModalTopModelos(){
-  document.getElementById('modal-top-modelos').classList.remove('hidden');
-  filtrarTopModelosPorPeriodo('hoje');
-}
-function fecharModalTopModelos(){
-  document.getElementById('modal-top-modelos').classList.add('hidden');
-  if(topModelosChart){ topModelosChart.destroy(); topModelosChart = null; }
-}
-
-document.getElementById('btn-top-modelos').addEventListener('click', abrirModalTopModelos);
-document.getElementById('fechar-modal-top-modelos').addEventListener('click', fecharModalTopModelos);
-
-// Listeners de período
-Object.entries(topModelosBtnsPeriod).forEach(([key,btn])=>{
-  btn.addEventListener('click', ()=>filtrarTopModelosPorPeriodo(key));
-});
-document.getElementById('topm-personalizado').addEventListener('click', ()=>{
-  document.getElementById('topm-data-personalizada').classList.toggle('hidden');
-});
-document.getElementById('topm-filtrar-personalizado').addEventListener('click', ()=>{
-  filtrarTopModelosPorPeriodo('personalizado');
-});
-
-
-function periodDates(key){
-  const now = new Date();
-  // helper
-  const atStart = (d)=>{ const n=new Date(d); n.setHours(0,0,0,0); return n; };
-  const atEnd = (d)=>{ const n=new Date(d); n.setHours(23,59,59,999); return n; };
-
-  let start, end;
-  switch(key){
-    case 'hoje':
-      start = atStart(now);
-      end   = atEnd(now);
-      break;
-    case 'ontem':
-      const y = new Date(now);
-      y.setDate(now.getDate()-1);
-      start = atStart(y);
-      end   = atEnd(y);
-      break;
-    case 'esta-semana':{
-      const d = now.getDay() || 7; // domingo=0 ->7
-      const monday = new Date(now);
-      monday.setDate(now.getDate() - d + 1);
-      start = atStart(monday);
-      end   = atEnd(now);
-      break;}
-    case 'semana-passada':{
-      const d = now.getDay() || 7;
-      const lastSunday = new Date(now);
-      lastSunday.setDate(now.getDate() - d);
-      const mondayLast = new Date(lastSunday);
-      mondayLast.setDate(lastSunday.getDate() - 6);
-      start = atStart(mondayLast);
-      end   = atEnd(lastSunday);
-      break;}
-    case 'este-mes':{
-      const first = new Date(now.getFullYear(), now.getMonth(), 1);
-      start = atStart(first);
-      end   = atEnd(now);
-      break;}
-    
-    case 'personalizado':
-    default:{
-      const sVal = document.getElementById('topm-data-inicio').value;
-      const eVal = document.getElementById('topm-data-fim').value;
-      if(!sVal || !eVal) return {start:null, end:null};
-      let sDate = new Date(sVal);
-      let eDate = new Date(eVal);
-      // se usuário inverter datas, corrige automaticamente
-      if(sDate > eDate){
-        const tmp = sDate;
-        sDate = eDate;
-        eDate = tmp;
-      }
-      start = atStart(sDate);
-      end   = atEnd(eDate);
-      break;}
-
-  }
-  return {start, end};
-}
-
-
-
-// ================= HUB DE DADOS TOP MODELOS ================= //
-function parseDateString(dataStr){
-  if(!dataStr) return null;
-  // formatos possíveis: dd/mm/yyyy, yyyy-mm-dd ou Date object
-  if (dataStr instanceof Date) return dataStr;
-  if (dataStr.includes('/')){
-    const [d,m,y] = dataStr.split('/');
-    return new Date(parseInt(y,10), parseInt(m,10)-1, parseInt(d,10));
-  }
-  return new Date(dataStr); // tenta ISO
-}
-
-
-
-
-function hubTopModelos(){
-  let base = [];
-  if (Array.isArray(window.historico) && window.historico.length){
-    base = window.historico.slice();
-  } else if (Array.isArray(window.historicoBaixas) && window.historicoBaixas.length){
-    base = window.historicoBaixas.slice();
-  } else {
-    try{
-      const ls = localStorage.getItem('historico');
-      if(ls){ base = JSON.parse(ls); }
-    }catch(e){ base = []; }
-  }
-
-  return base
-    .filter(item => item && item.modelo && item.modelo.trim() !== '' &&
-                    (!item.status || item.status.toUpperCase() !== 'BAD'))
-    .map(item => {
-      const parsed = parseDateString(item.data || item.dataBaixa || item.data_baixa);
-      if (!parsed || isNaN(parsed)) return null;
-      return {...item, _parsedDate: parsed};
-    })
-    .filter(Boolean);
-}
-function filtrarTopModelosPorPeriodo(key){
-  const base = hubTopModelos();
-  const {start,end} = periodDates(key);
-  if(!start || !end){ alert('Defina as datas corretamente.'); return; }
-
-  const lista = base.filter(h=> h._parsedDate >= start && h._parsedDate <= end);
-
-  const map = {};
-  lista.forEach(h=>{
-    const label = normalizeModelo(h.modelo || '');
-    map[label] = (map[label] || 0) + 1;
-  });
-
-  const sorted = Object.entries(map).sort((a,b)=>b[1]-a[1]);
-  renderTopModelosRanking(sorted);
-  renderTopModelosChart(sorted);
-}
-
-
-function renderTopModelosRanking(arr){
-  let html = '<table style="width:100%;"><thead><tr><th>#</th><th>Modelo</th><th>Qtd</th></tr></thead><tbody>';
-  arr.forEach((item,idx)=>{
-    html += `<tr><td>${idx+1}</td><td>${item[0]}</td><td>${item[1]}</td></tr>`;
-  });
-  html += '</tbody></table>';
-  topModelosRankingDiv.innerHTML = html;
-}
-
-
-
-function renderTopModelosChart(arr){
-  const labels = arr.map(i=>i[0]);
-  const counts = arr.map(i=>i[1]);
-  const total = counts.reduce((s,v)=>s+v,0);
-  if(topModelosChart){ topModelosChart.destroy(); }
-  const summaryDiv = document.getElementById('topm-summary');
-  if(labels.length===0){
-    topModelosRankingDiv.innerHTML = '<p style="text-align:center;">Nenhum dado no período selecionado.</p>';
-    if(summaryDiv){ summaryDiv.innerHTML = ''; }
-    return;
-  }
-  topModelosChart = new Chart(topModelosChartCanvas,{
-    type:'pie',
-    data:{
-      labels,
-      datasets:[{
-        data:counts,
-        backgroundColor: labels.map((_,i)=>`hsl(${Math.floor((360/labels.length)*i)},70%,60%)`)
-      }]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:true,
-      aspectRatio:1,
-      plugins:{
-        tooltip:{ callbacks:{ 
-          label:(ctx)=>{
-            const val = ctx.parsed;
-            const pct = ((val/total)*100).toFixed(1);
-            return `${ctx.label}: ${val} (${pct}%)`;
-          }
-        }},
-        legend:{ position:'bottom'}
-      }
-    }
-  });
-
-  // resumo textual
-  if(summaryDiv){
-    let html='';
-    arr.forEach(([label,val])=>{
-      const pct=((val/total)*100).toFixed(1);
-      html += `<p><strong>${label}</strong>: ${val} (${pct}%)</p>`;
-    });
-    summaryDiv.innerHTML = html;
-  }
-}
-
-
-
-});
-</script>
-</head>
-<body>
   <!-- Botão para alternar entre modo claro e escuro -->
   <button id="toggle-dark-mode" style="position: fixed; bottom: 20px; left: 10px; opacity: 0.7; z-index: 100; padding: 4px 7px; font-size: 0.7rem;">
         Modo Escuro
@@ -1951,6 +1714,295 @@ function renderTopModelosChart(arr){
   </div>
 
 
+
+<!-- Início do trecho modificado da lógica JavaScript para cálculo e atualização dinâmica -->
+<!-- Fim do trecho modificado da lógica JavaScript -->
+
+
+<!-- Início do trecho atualizado para cálculo dinâmico de adesões por data -->
+<!-- Fim do trecho atualizado -->
+
+
+<script>
+(function(){
+  try{
+    const k="__test__";
+    window.localStorage.setItem(k,"1");
+    window.localStorage.removeItem(k);
+  }catch(e){
+    var mem={};
+    window.localStorage={
+      setItem:(a,b)=>{mem[a]=String(b);},
+      getItem:(a)=>mem.hasOwnProperty(a)?mem[a]:null,
+      removeItem:(a)=>{delete mem[a];},
+      clear:()=>{mem={};}
+    };
+  }
+})();
+</script>
+
+<script>
+(function(){
+  function drawPie(ctx, labels, data, colors){
+    const total=data.reduce((a,b)=>a+b,0)||1;
+    const cx=ctx.canvas.width/2, cy=ctx.canvas.height/2;
+    const r=Math.min(cx,cy);
+    let start=-Math.PI/2;
+    for(let i=0;i<data.length;i++){
+      const slice=(data[i]/total)*Math.PI*2;
+      ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,r,start,start+slice);
+      ctx.closePath();
+      ctx.fillStyle=colors[i]||`hsl(${Math.floor(360*i/data.length)},70%,60%)`;
+      ctx.fill();
+      start+=slice;
+    }
+  }
+  window.Chart=function(canvas,config){
+    this.canvas=canvas; this.ctx=canvas.getContext('2d'); this.config=config; this.render();
+  };
+  Chart.prototype.render=function(){
+    if(this.config.type!=='pie') return;
+    const d=this.config.data||{};
+    const labels=d.labels||[];
+    const dataset=(d.datasets||[])[0]||{};
+    drawPie(this.ctx, labels, dataset.data||[], dataset.backgroundColor||[]);
+  };
+  Chart.prototype.destroy=function(){
+    this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
+  };
+})();
+</script>
+<script>
+["estoque", "vendas", "usuarios", "baixas", "consultores"].forEach(chave => {
+  if (!localStorage.getItem(chave)) {
+    localStorage.setItem(chave, JSON.stringify([]));
+  }
+});
+window.addEventListener('DOMContentLoaded', () => {
+
+/* =====================================================
+* TOP MODELOS (RANKING) – MODAL & LÓGICA
+* -----------------------------------------------------*/
+const topModelosBtnsPeriod = {
+  'hoje': document.getElementById('topm-hoje'),
+  'ontem': document.getElementById('topm-ontem'),
+  'esta-semana': document.getElementById('topm-esta-semana'),
+  'semana-passada': document.getElementById('topm-semana-passada'),
+  'este-mes': document.getElementById('topm-este-mes')
+};
+const topModelosRankingDiv = document.getElementById('topm-ranking');
+const topModelosChartCanvas = document.getElementById('topm-chart');
+let topModelosChart = null;
+
+function abrirModalTopModelos(){
+  document.getElementById('modal-top-modelos').classList.remove('hidden');
+  filtrarTopModelosPorPeriodo('hoje');
+}
+function fecharModalTopModelos(){
+  document.getElementById('modal-top-modelos').classList.add('hidden');
+  if(topModelosChart){ topModelosChart.destroy(); topModelosChart = null; }
+}
+
+document.getElementById('btn-top-modelos').addEventListener('click', abrirModalTopModelos);
+document.getElementById('fechar-modal-top-modelos').addEventListener('click', fecharModalTopModelos);
+
+// Listeners de período
+Object.entries(topModelosBtnsPeriod).forEach(([key,btn])=>{
+  btn.addEventListener('click', ()=>filtrarTopModelosPorPeriodo(key));
+});
+document.getElementById('topm-personalizado').addEventListener('click', ()=>{
+  document.getElementById('topm-data-personalizada').classList.toggle('hidden');
+});
+document.getElementById('topm-filtrar-personalizado').addEventListener('click', ()=>{
+  filtrarTopModelosPorPeriodo('personalizado');
+});
+
+
+function periodDates(key){
+  const now = new Date();
+  // helper
+  const atStart = (d)=>{ const n=new Date(d); n.setHours(0,0,0,0); return n; };
+  const atEnd = (d)=>{ const n=new Date(d); n.setHours(23,59,59,999); return n; };
+
+  let start, end;
+  switch(key){
+    case 'hoje':
+      start = atStart(now);
+      end   = atEnd(now);
+      break;
+    case 'ontem':
+      const y = new Date(now);
+      y.setDate(now.getDate()-1);
+      start = atStart(y);
+      end   = atEnd(y);
+      break;
+    case 'esta-semana':{
+      const d = now.getDay() || 7; // domingo=0 ->7
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - d + 1);
+      start = atStart(monday);
+      end   = atEnd(now);
+      break;}
+    case 'semana-passada':{
+      const d = now.getDay() || 7;
+      const lastSunday = new Date(now);
+      lastSunday.setDate(now.getDate() - d);
+      const mondayLast = new Date(lastSunday);
+      mondayLast.setDate(lastSunday.getDate() - 6);
+      start = atStart(mondayLast);
+      end   = atEnd(lastSunday);
+      break;}
+    case 'este-mes':{
+      const first = new Date(now.getFullYear(), now.getMonth(), 1);
+      start = atStart(first);
+      end   = atEnd(now);
+      break;}
+    
+    case 'personalizado':
+    default:{
+      const sVal = document.getElementById('topm-data-inicio').value;
+      const eVal = document.getElementById('topm-data-fim').value;
+      if(!sVal || !eVal) return {start:null, end:null};
+      let sDate = new Date(sVal);
+      let eDate = new Date(eVal);
+      // se usuário inverter datas, corrige automaticamente
+      if(sDate > eDate){
+        const tmp = sDate;
+        sDate = eDate;
+        eDate = tmp;
+      }
+      start = atStart(sDate);
+      end   = atEnd(eDate);
+      break;}
+
+  }
+  return {start, end};
+}
+
+
+
+// ================= HUB DE DADOS TOP MODELOS ================= //
+function parseDateString(dataStr){
+  if(!dataStr) return null;
+  // formatos possíveis: dd/mm/yyyy, yyyy-mm-dd ou Date object
+  if (dataStr instanceof Date) return dataStr;
+  if (dataStr.includes('/')){
+    const [d,m,y] = dataStr.split('/');
+    return new Date(parseInt(y,10), parseInt(m,10)-1, parseInt(d,10));
+  }
+  return new Date(dataStr); // tenta ISO
+}
+
+
+
+
+function hubTopModelos(){
+  let base = [];
+  if (Array.isArray(window.historico) && window.historico.length){
+    base = window.historico.slice();
+  } else if (Array.isArray(window.historicoBaixas) && window.historicoBaixas.length){
+    base = window.historicoBaixas.slice();
+  } else {
+    try{
+      const ls = localStorage.getItem('historico');
+      if(ls){ base = JSON.parse(ls); }
+    }catch(e){ base = []; }
+  }
+
+  return base
+    .filter(item => item && item.modelo && item.modelo.trim() !== '' &&
+                    (!item.status || item.status.toUpperCase() !== 'BAD'))
+    .map(item => {
+      const parsed = parseDateString(item.data || item.dataBaixa || item.data_baixa);
+      if (!parsed || isNaN(parsed)) return null;
+      return {...item, _parsedDate: parsed};
+    })
+    .filter(Boolean);
+}
+function filtrarTopModelosPorPeriodo(key){
+  const base = hubTopModelos();
+  const {start,end} = periodDates(key);
+  if(!start || !end){ console.log('Defina as datas corretamente.'); return; }
+
+  const lista = base.filter(h=> h._parsedDate >= start && h._parsedDate <= end);
+
+  const map = {};
+  lista.forEach(h=>{
+    const label = normalizeModelo(h.modelo || '');
+    map[label] = (map[label] || 0) + 1;
+  });
+
+  const sorted = Object.entries(map).sort((a,b)=>b[1]-a[1]);
+  renderTopModelosRanking(sorted);
+  renderTopModelosChart(sorted);
+}
+
+
+function renderTopModelosRanking(arr){
+  let html = '<table style="width:100%;"><thead><tr><th>#</th><th>Modelo</th><th>Qtd</th></tr></thead><tbody>';
+  arr.forEach((item,idx)=>{
+    html += `<tr><td>${idx+1}</td><td>${item[0]}</td><td>${item[1]}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  topModelosRankingDiv.innerHTML = html;
+}
+
+
+
+function renderTopModelosChart(arr){
+  const labels = arr.map(i=>i[0]);
+  const counts = arr.map(i=>i[1]);
+  const total = counts.reduce((s,v)=>s+v,0);
+  if(topModelosChart){ topModelosChart.destroy(); }
+  const summaryDiv = document.getElementById('topm-summary');
+  if(labels.length===0){
+    topModelosRankingDiv.innerHTML = '<p style="text-align:center;">Nenhum dado no período selecionado.</p>';
+    if(summaryDiv){ summaryDiv.innerHTML = ''; }
+    return;
+  }
+  topModelosChart = new Chart(topModelosChartCanvas,{
+    type:'pie',
+    data:{
+      labels,
+      datasets:[{
+        data:counts,
+        backgroundColor: labels.map((_,i)=>`hsl(${Math.floor((360/labels.length)*i)},70%,60%)`)
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:true,
+      aspectRatio:1,
+      plugins:{
+        tooltip:{ callbacks:{ 
+          label:(ctx)=>{
+            const val = ctx.parsed;
+            const pct = ((val/total)*100).toFixed(1);
+            return `${ctx.label}: ${val} (${pct}%)`;
+          }
+        }},
+        legend:{ position:'bottom'}
+      }
+    }
+  });
+
+  // resumo textual
+  if(summaryDiv){
+    let html='';
+    arr.forEach(([label,val])=>{
+      const pct=((val/total)*100).toFixed(1);
+      html += `<p><strong>${label}</strong>: ${val} (${pct}%)</p>`;
+    });
+    summaryDiv.innerHTML = html;
+  }
+}
+
+
+
+});
+</script>
   <script>
         // Função para normalizar o valor do campo "modelo"
         function normalizeModelo(modelo) {
@@ -4004,13 +4056,7 @@ estoque.splice(idx, 1);
     rebuildCentralCustoChart();
   }
 
-  if(typeof Chart==='undefined'){
-    const s=document.createElement('script');
-    s.src='https://cdn.jsdelivr.net/npm/chart.js';
-    s.onload=initCentralCustoChart;
-    document.head.appendChild(s);
-  } else {
-    initCentralCustoChart();
+  initCentralCustoChart();
   }
 
 
@@ -6050,10 +6096,6 @@ function atualizarModalReservas(){
 
 
 </script>
-</body>
-</html>
-
-<!-- Início do trecho modificado da lógica JavaScript para cálculo e atualização dinâmica -->
 <script>
 function calcularIndicadoresDashboard(registros) {
   var totalComissao = 0;
@@ -6110,10 +6152,6 @@ function atualizarDashboardComDadosFiltrados() {
   atualizarDashboard(indicadores);
 }
 </script>
-<!-- Fim do trecho modificado da lógica JavaScript -->
-
-
-<!-- Início do trecho atualizado para cálculo dinâmico de adesões por data -->
 <script>
 function parseDateBR(dataStr) {
   if (!dataStr || typeof dataStr !== "string") return null;
@@ -6284,9 +6322,6 @@ function filtrarDashboardConsultor(dtStart, dtEnd, nomeConsultorSel) {
 
 }
 </script>
-<!-- Fim do trecho atualizado -->
-
-
 <script>
 // Exemplo de integração com os botões de filtro
 document.getElementById("dash-hoje-btn").addEventListener("click", () => {
