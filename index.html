@@ -12,18 +12,25 @@
           font-family: 'Poppins', sans-serif;
           margin: 20px;
         }
-        body:not(.dark-mode) {
-          background: linear-gradient(to bottom right, #00d700, #003b00);
-          color: #000;
-        }
+          body:not(.dark-mode) {
+            background: linear-gradient(to top, #003b00, #00d700);
+            min-height: 100vh;
+            background-attachment: fixed;
+            background-size: cover;
+            color: #000;
+          }
+          body:not(.dark-mode) * {
+            font-family: 'Poppins', sans-serif;
+            color: #000;
+          }
         .hidden { display: none !important; }
 
         body:not(.dark-mode) .card {
-          background: #fff;
-          padding: 16px;
-          border-radius: 8px;
-          margin-bottom: 24px;
-          border: 1px solid #ccc;
+          background: rgba(255, 255, 255, 0.92);
+          border-radius: 10px;
+          padding: 20px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          margin-bottom: 32px;
         }
 
 
@@ -281,16 +288,7 @@
         * ---------------------------------------------------*/
         #toggle-cadastro-btn {
           margin-bottom: 10px;
-          padding: 6px 10px;
-          font-size: 0.9rem;
-          cursor: pointer;
-          border: 1px solid #ccc;
           width: 200px;
-          background-color: green;
-          color: #fff;
-        }
-        body:not(.dark-mode) #toggle-cadastro-btn:hover {
-          background-color: green;
         }
 
 
@@ -634,22 +632,22 @@
   flex:0 0 280px;
 }
 
-/* ==== Novos estilos globais para botões no modo claro ==== */
-body:not(.dark-mode) button {
-  background-color: #fff;
-  color: #000;
-  border: 1px solid #00d700;
-  padding: 8px 16px;
-  font-weight: 600;
-  border-radius: 6px;
-  transition: 0.3s;
-  cursor: pointer;
-}
-body:not(.dark-mode) button:hover {
-  background-color: #00b500;
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
+  /* ==== Novos estilos globais para botões no modo claro ==== */
+  body:not(.dark-mode) button {
+    background-color: #d8ff00;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  body:not(.dark-mode) button:hover {
+    background-color: #c5e900;
+    transform: scale(1.02);
+  }
 </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
