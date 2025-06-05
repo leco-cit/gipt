@@ -15,14 +15,14 @@
           background-size: cover;
           margin: 0;
           padding: 0;
-          color: #000;
+          color: #fff;
         }
         body, label, p, h1, h2, h3, h4, h5, h6, span {
-          color: #000 !important;
+          color: #fff !important;
         }
         h1, h2, h3 {
           font-weight: 600;
-          color: #000;
+          color: #fff;
         }
         .hidden { display: none !important; }
 
@@ -98,13 +98,14 @@
           max-width: 900px;
           overflow-y: auto;
           font-size: 0.9rem;
-          background: rgba(255, 255, 255, 0.97);
-          color: #000;
+          background: rgba(0, 0, 0, 0.9);
+          color: #fff;
         }
         .overlay {
           position: fixed;
           top: 0; left: 0;
           width: 100%; height: 100%;
+          background: rgba(0,0,0,0.5);
           z-index: 900;
         }
         /* Redução do tamanho e centralização do modal de confirmação (usado para logout, etc.) */
@@ -567,7 +568,7 @@
 button,
 .btn {
   background-color: #d8ff00 !important;
-  color: #003b00 !important;
+  color: #000 !important;
   font-weight: bold;
   border-radius: 6px;
   border: none;
@@ -2965,7 +2966,7 @@ function extrairTipoCadastro(cadastroStr){
               return;
             }
             list.forEach(item=>{
-              const color = (item.status === "GOOD") ? "green" : "red";
+              const color = (item.status === "RESERVADO") ? "red" : "white";
               const idx = estoque.indexOf(item);
               const valoresItem = (valores[item.modelo] && valores[item.modelo][item.plano]) || {};
               const custoExibir = (typeof valoresItem.custo !== "undefined") ? parseFloat(valoresItem.custo).toFixed(2) : "";
@@ -3017,7 +3018,7 @@ function extrairTipoCadastro(cadastroStr){
               return;
             }
             list.forEach(item=>{
-              const color = (item.status === "GOOD") ? "green" : "red";
+              const color = (item.status === "RESERVADO") ? "red" : "white";
               const idx = estoque.indexOf(item);
               const valoresItem = (valores[item.modelo] && valores[item.modelo][item.plano]) || {};
               let vendaExibir = "";
