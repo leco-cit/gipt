@@ -1780,7 +1780,7 @@ body.dark-mode .acao {
     localStorage.setItem(chave, JSON.stringify([]));
   }
 });
-window.addEventListener('DOMContentLoaded', () => {
+function giptInit(){
 
 /* =====================================================
 * TOP MODELOS (RANKING) – MODAL & LÓGICA
@@ -2001,7 +2001,6 @@ function renderTopModelosChart(arr){
 
 
 
-});
 </script>
   <script>
         // Função para normalizar o valor do campo "modelo"
@@ -2201,10 +2200,7 @@ function renderTopModelosChart(arr){
         }
 
 
-        document.addEventListener("DOMContentLoaded", function(){
-
-
-const btnReservas = document.getElementById('btn-reservas');
+        const btnReservas = document.getElementById('btn-reservas');
 btnReservas.addEventListener('click', ()=>{
   atualizarModalReservas();
   document.getElementById('modal-reserva').classList.remove('hidden');
@@ -5993,8 +5989,19 @@ estoque.splice(idx, 1);
           }
 
 
-        }); // DOMContentLoaded end
+        }
 
+function tryInit(){
+  if(window._giptInitialized) return;
+  if(document.getElementById('firstAccessForm')){
+    window._giptInitialized = true;
+    giptInit();
+  } else {
+    setTimeout(tryInit, 100);
+  }
+}
+if(document.readyState !== 'loading') { tryInit(); } else { document.addEventListener('DOMContentLoaded', tryInit); }
+window.addEventListener('load', tryInit);
 
         window.showAlert = function(message, callback) {
           const modal = document.getElementById('modal-alert');
