@@ -1,4 +1,9 @@
-<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestão Integrada do Parceiro Ton</title>
   <style>
         /* ----------------------------------------------------
         * (A) ESTILOS GERAIS
@@ -8,7 +13,7 @@
         }
         body {
           font-family: 'Poppins', sans-serif;
-          background: linear-gradient(to bottom, #003b00, #00d700);
+          background: linear-gradient(to bottom, #003300, #00aa00);
           min-height: 100vh;
           background-attachment: fixed;
           background-repeat: no-repeat;
@@ -564,21 +569,20 @@
   flex:0 0 280px;
 }
 
-/* ==== Novos estilos globais para botões no modo claro ==== */
+/* ==== Estilos de botões no modo claro ==== */
 button,
 .btn {
-  background-color: #d8ff00 !important;
-  color: #000 !important;
+  background-color: #ffffff;
+  color: #000;
   font-weight: bold;
   border-radius: 6px;
-  border: none;
+  border: 1px solid #ccc;
   padding: 10px 20px;
   transition: background-color 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
   cursor: pointer;
 }
 button:hover {
-  background-color: #c2e500 !important;
+  background-color: #f0f0f0;
 }
 
 footer {
@@ -627,7 +631,7 @@ body.dark-mode button,
 body.dark-mode input[type="button"],
 body.dark-mode input[type="submit"],
 body.dark-mode .btn {
-  background-color: #d8ff00 !important;
+  background-color: #ffea00 !important;
   color: #000000 !important;
   font-weight: bold;
   border: none;
@@ -677,11 +681,13 @@ body.dark-mode button,
 body.dark-mode input[type="submit"],
 body.dark-mode .btn,
 body.dark-mode .acao {
-  background-color: #d8ff00 !important;
+  background-color: #ffea00 !important;
   color: #000 !important;
   font-weight: bold;
 }
 </style>
+</head>
+<body>
   <!-- Botão para alternar entre modo claro e escuro -->
   <button id="toggle-dark-mode" style="position: fixed; bottom: 20px; left: 10px; opacity: 0.7; z-index: 100; padding: 4px 7px; font-size: 0.7rem;">
         Modo Escuro
@@ -6344,3 +6350,5 @@ document.getElementById("dash-este-mes-btn").addEventListener("click", () => {
   filtrarDashboardConsultor(inicioMes, hoje, "");
 });
 </script>
+</body>
+</html>
